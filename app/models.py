@@ -38,3 +38,24 @@ class User(db.Model, UserMixin):
                             secondary=roles_users,
                             backref=db.backref('users',
                                                lazy='dynamic'))
+
+
+class ExportJob(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    dataset_name = db.Column(db.String(255))
+    do_sampling = db.Column(db.Boolean)
+    sample_percent = db.Column(db.SmallInteger)
+
+
+class ExportJobSelectVariable(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer(), db.ForeignKey('export_job.id'))
+    selected_variable = db.Column(db.String(255))
+
+
+class ExportJobIncludeValue(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer(), db.ForeignKey('export_job.id'))
+    variable_name = db.Column(db.String(255))
+    variable_value = db.Column(db.String(255))

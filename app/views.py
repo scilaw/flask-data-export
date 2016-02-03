@@ -36,4 +36,13 @@ def download_page():
 
 @views.route('/submit_job', methods=['POST'])
 def submit_job():
+    dataset_fields = dataops.all_datasets_fields()
+    select_vars = request.form['select_vars']
+    do_sampling = request.form['do_sampling']
+    sample_percent = request.form['sample_percent']
+    email = request.form['email']
+    dataset_name = request.form['dataset_name']
+    for field in dataset_fields:
+        key = "filter_vars_" + field
+        field_values = request.form.getlist(key)
     redirect(url_for('index'))
