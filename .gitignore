@@ -1,0 +1,6 @@
+*.pyc
+*.*~
+instance/*.cfg
+instance/*.db
+cache/*.pkl-blosc
+Neulaw

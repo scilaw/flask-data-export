@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Neulaw Data Export</title>
+        <link href="{{url_for('static', filename='bower_components/bootstrap-multiselect/dist/css/bootstrap-multiselect.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='css/site.css')}}" rel="stylesheet">
+        <script src="{{url_for('static', filename='bower_components/jquery/dist/jquery.min.js')}}"></script>
+        <script src="{{url_for('static', filename='bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+        <script src="{{url_for('static', filename='bower_components/bootstrap-multiselect/dist/js/bootstrap-multiselect.js')}}"></script>
+        <script src="{{url_for('static', filename='js/site.js')}}"></script>
+    </head>
+    <body>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Neulaw Data Export</a>
+                </div>
+                <!--
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                -->
+            </div>
+        </nav>
+
+        <div class="container">
+        
+            {% block content %}{% endblock %}
+
+        </div><!-- /.container -->
+
+
+    </body>
+</html>

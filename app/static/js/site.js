@@ -1,0 +1,14 @@
+$(document).ready(function() {
+
+    $('.nav-tabs a').click(function(e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+
+    $('.nav-tabs a:first').tab('show');
+
+    $('select.select_vars').multiselect();
+
+    $('select.filter_vars').multiselect();
+
+});

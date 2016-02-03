@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+
+<br />
+
+<div class="well">
+    <h1>Data exporter info</h1>
+    <p>Here we should have some words to explain what all of this is about and how to use it<p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</div>
+
+<ul class="nav nav-tabs">
+    {% for dataset_name in field_values %}
+    <li><a href="#tab_pane_{{dataset_name}}">{{ datasets[dataset_name]['name'] }}</a></li>
+    {% endfor %}
+</ul>
+
+
+<div class="tab-content" >
+    {% for dataset_name in field_values %}
+
+    <div class="tab-pane" id="tab_pane_{{dataset_name}}">
+
+        <!-- {{ "{:,}".format(dataset_record_count[dataset_name]) }} total records<br /> -->
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">Data Description</div>
+        <div class="panel-body">
+            <p>
+            {{ datasets[dataset_name]['description'] }}
+            </p>
+
+        </div>
+    </div>
+    
+    <form class="form-inline" role="form" action="submit_job" method="post">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Variables to Select</div>
+            <div class="panel-body">
+                <select class="select_vars" name="select_vars" multiple="multiple">
+                    {% for field in dataset_fields[dataset_name] %}
+                    <option selected="selected" value="{{ field }}">{{ datasets[dataset_name]['fields'][field] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Filters / Subsets</div>
+            <div class="panel-body">
+                {% for field in field_values[dataset_name] %}
+                <div>
+                    <label>{{ datasets[dataset_name]['fields'][field] }}
+                        <select class="filter_vars" name="filter_vars_{{ datasets[dataset_name]['fields'][field] }}" multiple="multiple">
+                            {% for value in field_values[dataset_name][field] %}
+                            <option selected="selected" value="{{ value }}">{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Random Sampling</div>
+            <div class="panel-body">
+
+                <label> 
+                    <input name="do_sampling" type="checkbox" />
+                    Use a random sample of the data
+                </label>
+                <br />
+
+                <label> 
+                    Include <input "sample_percent" type="text" value="10" size="2">% of the records
+                </label>
+                <br />
+
+                <label>
+                    Proportions will be maintained for these variables: <br />
+                    <ul>
+                        {% for field in field_values[dataset_name] %}
+                        <li>{{ datasets[dataset_name]['fields'][field] }}</li>
+                        {% endfor %}
+                    </ul>
+                </label>
+
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">E-mail</div>
+            <div class="panel-body">
+
+                <p>It will take a few minutes for the data export to be generated. We'll email you when the file is ready.</p>
+
+                <label>E-mail address
+                    <input type="text" name="email" />
+                </label>
+
+            </div>
+        </div>
+
+        <div class="clearfix">
+            <input type="submit" value="Export!" class="btn btn-success btn-lg pull-right" />
+        </div>
+
+    </form>
+
+    </div> <!-- tab-pane -->
+
+    {% endfor %}
+
+</div> <!-- tab-content -->
+
+{% endblock %}

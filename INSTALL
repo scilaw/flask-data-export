@@ -1,0 +1,18 @@
+# Install dependencies
+sudo apt-get install python-dev libffi-dev
+sudo pip install flask-appbuilder
+sudo pip install flask-bcrypt
+sudo pip install Flask-SQLAlchemy
+sudo pip install Flask-Migrate
+sudo pip install Flask-Security
+sudo pip install pandas
+sudo pip install flask-debugtoolbar
+
+# Make the configuration
+cp example.cfg instance/app.cfg
+
+# Set up the database
+python manage.py db upgrade
+
+# Set up secret keys
+bash setup_keys.sh
