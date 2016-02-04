@@ -1,6 +1,6 @@
 *.pyc
 *.*~
-instance/*.cfg
-instance/*.db
-cache/*.pkl-blosc
+instance/*
+cache/*
+exports/*
 Neulaw

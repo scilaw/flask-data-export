@@ -1,4 +1,5 @@
 
+import subprocess
 import datasets
 import dataops
 from flask import Blueprint
@@ -37,7 +38,7 @@ def download_page():
 
 
 def find_or_create_user(email):
-    user = security.datastore.find_user(email)
+    user = security.datastore.find_user(email=email)
     if (user is None):
         user = security.datastore.create_user(email=email)
     return user
@@ -47,25 +48,29 @@ def find_or_create_user(email):
 def submit_job():
     user = find_or_create_user(request.form['email'])
     job = ExportJob()
-    job['user_id'] = user.id
-    job['dataset_name'] = request.form['dataset_name']
-    job['do_sampling'] = request.form['do_sampling']
-    job['sample_percent'] = request.form['sample_percent']
-    job['status'] = 'new'
+    job.user_id = user.id
+    job.dataset_name = request.form['dataset_name']
+    job.do_sampling = request.form['do_sampling']
+    job.sample_percent = request.form['sample_percent']
+    job.status = 'new'
     db.session.add(job)
     db.session.commit()
     for selected_variable in request.form.getlist('select_vars'):
         var_record = ExportJobSelectVariable()
-        var_record['job_id'] = job.id
-        var_record['selected_variable'] = selected_variable
+        var_record.job_id = job.id
+        var_record.selected_variable = selected_variable
         db.session.add(var_record)
     for field in dataops.all_datasets_fields():
         key = "filter_vars_" + field
         for value in request.form.getlist(key):
             val_record = ExportJobIncludeValue()
-            val_record['job_id'] = job.id
-            val_record['variable_name'] = field
-            val_record['variable_value'] = value
+            val_record.job_id = job.id
+            val_record.variable_name = field
+            val_record.variable_value = value
             db.session.add(val_record)
+    db.session.commit()
+    path = os.path.abspath(os.path.dirname(__file__))
+    job_script = os.path.path.join(path, 'job.py')
+    job.pid = subprocess.Popen([job_script, job.id]).pid
     db.session.commit()
     redirect(url_for('index'))
