@@ -3,8 +3,10 @@ import datasets
 import dataops
 from flask import Blueprint
 from flask import request, render_template, redirect, url_for
-# from flask.ext.security import login_required
-# from models import User
+from app import db
+from models import ExportJob, ExportJobSelectVariable, ExportJobIncludeValue
+from security import security
+
 
 views = Blueprint("views", __name__, template_folder="templates")
 
@@ -34,15 +36,36 @@ def download_page():
     return render_template('download_page.html')
 
 
+def find_or_create_user(email):
+    user = security.datastore.find_user(email)
+    if (user is None):
+        user = security.datastore.create_user(email=email)
+    return user
+
+
 @views.route('/submit_job', methods=['POST'])
 def submit_job():
-    dataset_fields = dataops.all_datasets_fields()
-    select_vars = request.form['select_vars']
-    do_sampling = request.form['do_sampling']
-    sample_percent = request.form['sample_percent']
-    email = request.form['email']
-    dataset_name = request.form['dataset_name']
-    for field in dataset_fields:
+    user = find_or_create_user(request.form['email'])
+    job = ExportJob()
+    job['user_id'] = user.id
+    job['dataset_name'] = request.form['dataset_name']
+    job['do_sampling'] = request.form['do_sampling']
+    job['sample_percent'] = request.form['sample_percent']
+    job['status'] = 'new'
+    db.session.add(job)
+    db.session.commit()
+    for selected_variable in request.form.getlist('select_vars'):
+        var_record = ExportJobSelectVariable()
+        var_record['job_id'] = job.id
+        var_record['selected_variable'] = selected_variable
+        db.session.add(var_record)
+    for field in dataops.all_datasets_fields():
         key = "filter_vars_" + field
-        field_values = request.form.getlist(key)
+        for value in request.form.getlist(key):
+            val_record = ExportJobIncludeValue()
+            val_record['job_id'] = job.id
+            val_record['variable_name'] = field
+            val_record['variable_value'] = value
+            db.session.add(val_record)
+    db.session.commit()
     redirect(url_for('index'))
