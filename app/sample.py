@@ -4,16 +4,6 @@ import numpy
 import pandas
 
 
-def partition_rows(dataset, fields, partition):
-    blah = pandas.Series([True] * len(dataset))
-    for i in range(len(fields)):
-        field = fields[i]
-        value = partition[i]
-        criteria = dataset[field] == value
-        blah = blah & criteria
-    return blah
-
-
 def probabilistic_rounding(number):
     fp, ip = numpy.modf(number)
     roll = numpy.random.sample()
