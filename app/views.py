@@ -1,9 +1,11 @@
 
+import os
 import subprocess
-import datasets
-import dataops
 from flask import Blueprint
 from flask import request, render_template, redirect, url_for
+
+import datasets
+import dataops
 from app import db
 from models import ExportJob, ExportJobSelectVariable, ExportJobIncludeValue
 from security import security
@@ -41,17 +43,18 @@ def find_or_create_user(email):
     user = security.datastore.find_user(email=email)
     if (user is None):
         user = security.datastore.create_user(email=email)
+        db.session.commit()
     return user
 
 
 @views.route('/submit_job', methods=['POST'])
 def submit_job():
-    user = find_or_create_user(request.form['email'])
+    user = find_or_create_user(request.form.get('email'))
     job = ExportJob()
     job.user_id = user.id
-    job.dataset_name = request.form['dataset_name']
-    job.do_sampling = request.form['do_sampling']
-    job.sample_percent = request.form['sample_percent']
+    job.dataset_name = request.form.get('dataset_name')
+    job.do_sampling = int(request.form.get('do_sampling') == 'on')
+    job.sample_percent = int(request.form.get('sample_percent'))
     job.status = 'new'
     db.session.add(job)
     db.session.commit()
@@ -70,7 +73,7 @@ def submit_job():
             db.session.add(val_record)
     db.session.commit()
     path = os.path.abspath(os.path.dirname(__file__))
-    job_script = os.path.path.join(path, 'job.py')
-    job.pid = subprocess.Popen([job_script, job.id]).pid
+    job_script = os.path.join(path, '..', 'job.py')
+    job.pid = subprocess.Popen([job_script, str(job.id)]).pid
     db.session.commit()
-    redirect(url_for('index'))
+    return redirect(url_for('views.index'))

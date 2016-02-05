@@ -35,6 +35,7 @@ def partition_sizes(dataset, fields, partitions):
         criteria = partition_rows(dataset, fields, partition)
         size = numpy.sum(criteria)
         sizes.append(size)
+        print("partition size: " + str(size))
     return sizes
 
 
