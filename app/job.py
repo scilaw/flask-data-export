@@ -1,26 +1,20 @@
 #!/usr/bin/env python
 
 import os
-import sys
 import zipfile
 from flask import render_template
-from flask.ext.mail import Mail, Message
+from flask.ext.mail import Message
 from tempfile import mkdtemp
 from shutil import copyfile, move, rmtree
 
-from app import datasets
-from app import dataops
-from app import get_db, get_app
-from app.models import User
-from app.models import ExportJob
-from app.models import ExportJobSelectVariable
-from app.models import ExportJobIncludeValue
-from app.sample import stratified_random_sample
-
-
-app = get_app()
-db = get_db()
-mail = Mail(app)
+import datasets
+import dataops
+from app import db, mail, app
+from models import User
+from models import ExportJob
+from models import ExportJobSelectVariable
+from models import ExportJobIncludeValue
+from sample import stratified_random_sample
 
 
 def get_filtered_data(data, filter_vars):
@@ -58,12 +52,12 @@ def get_data_export(job, select_vars, filter_vars):
     return get_select_fields(data, select_vars)
 
 
-def export_zip(data, dataset_name):
+def export_zip(data, job_id, dataset_name):
     app.logger.info("Make zip")
     tempdir = mkdtemp(prefix='nexp')
     os.chdir(tempdir)
-    fname = job.dataset_name + '.csv'
-    zip_fname = 'export_' + str(job.id) + '.zip'
+    fname = dataset_name + '.csv'
+    zip_fname = 'export_' + str(job_id) + '.zip'
     app.logger.info("Write csv")
     data.to_csv(fname)
     zip_file = zipfile.ZipFile(zip_fname, mode='w')
@@ -99,16 +93,15 @@ def notify_complete(user, job, select_vars, filter_vars):
 def job_complete(job, select_vars, filter_vars):
     user = User().query.get(job.user_id)
     notify_complete(user, job, select_vars, filter_vars)
+    db.session.add(job)
     job.status = 'complete'
+    db.session.commit()
 
 
-if __name__ == '__main__':
-    pid = sys.argv[1]
-    with app.app_context():
-        job = ExportJob().query.get(pid)
-        select_vars = ExportJobSelectVariable().query.filter_by(job_id=job.id)
-        filter_vars = ExportJobIncludeValue().query.filter_by(job_id=job.id)
-        data = get_data_export(job, select_vars, filter_vars)
-        export_zip(data, job.dataset_name)
-        job_complete(job, select_vars, filter_vars)
-        db.session.commit()
+def run_export_job(job_id):
+    job = ExportJob().query.get(job_id)
+    select_vars = ExportJobSelectVariable().query.filter_by(job_id=job.id)
+    filter_vars = ExportJobIncludeValue().query.filter_by(job_id=job.id)
+    data = get_data_export(job, select_vars, filter_vars)
+    export_zip(data, job.id, job.dataset_name)
+    job_complete(job, select_vars, filter_vars)

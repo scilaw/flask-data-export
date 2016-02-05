@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, g
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.migrate import Migrate
+from flask.ext.mail import Mail
 from flask_debugtoolbar import DebugToolbarExtension
 
 
@@ -10,19 +11,16 @@ def get_app():
     return app
 
 
-# TODO: use flask.g - http://flask.pocoo.org/docs/0.10/appcontext/#app-context
-def get_db():
-    app = get_app()
-    return SQLAlchemy(app)
-
-
-db = get_db()
+def get_db(app):
+    with app.app_context():
+        db = getattr(g, '_database', None)
+        if db is None:
+            db = g._database = SQLAlchemy(app)
+            return db
 
 
 def create_app():
-    app = get_app()
-    Migrate(app, db)
-    DebugToolbarExtension(app)
+    global app
     from .security import security
     security.init_app(app)
     from .views import views
@@ -30,3 +28,10 @@ def create_app():
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
     return app
+
+
+app = get_app()
+db = get_db(app)
+mail = Mail(app)
+migrate = Migrate(app, db)
+debug_bar = DebugToolbarExtension(app)

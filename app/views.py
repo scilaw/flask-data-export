@@ -73,7 +73,7 @@ def submit_job():
             db.session.add(val_record)
     db.session.commit()
     path = os.path.abspath(os.path.dirname(__file__))
-    job_script = os.path.join(path, '..', 'job.py')
-    job.pid = subprocess.Popen([job_script, str(job.id)]).pid
+    job_script = os.path.join(path, '..', 'manage.py')
+    job.pid = subprocess.Popen([job_script, 'export_job', str(job.id)]).pid
     db.session.commit()
     return redirect(url_for('views.index'))
