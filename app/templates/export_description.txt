@@ -1,0 +1,18 @@
+Export #{{ job.id }} for {{ datasets[dataset_name]['name'] }}
+
+These variables were included:
+{% for select_var in select_vars %}
+* {{ datasets[dataset_name]['fields'][select_var.selected_variable] }}{% endfor %}
+
+These values were included:
+{% for filter_var in filter_vars %}
+* {{ datasets[dataset_name]['fields'][filter_var.variable_name] }} - {{ filter_var.variable_value }}{% endfor %}
+
+{% if job.do_sampling %}
+Selected a {{job.sample_percent}}% sample.
+Proportions were maintained for these variables: 
+{% for field in field_values[dataset_name] %}
+* {{ datasets[dataset_name]['fields'][field] }}{% endfor %}
+{% else %}
+No random sampling
+{% endif %}

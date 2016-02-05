@@ -32,8 +32,8 @@
 
         </div>
     </div>
-    
-    <form class="form-inline" role="form" action="submit_job" method="post">
+
+    <form class="form-inline" role="form" action="submit_job" method="post" data-toggle="validator">
 
         <input type="hidden" name="dataset_name" value="{{ dataset_name }}" />
 
@@ -54,7 +54,7 @@
                 {% for field in field_values[dataset_name] %}
                 <div>
                     <label>{{ datasets[dataset_name]['fields'][field] }}
-                        <select class="filter_vars" name="filter_vars_{{ datasets[dataset_name]['fields'][field] }}" multiple="multiple">
+                        <select class="filter_vars" name="filter_vars_{{ field }}" multiple="multiple">
                             {% for value in field_values[dataset_name][field] %}
                             <option selected="selected" value="{{ value }}">{{ value }}</option>
                             {% endfor %}
@@ -99,9 +99,13 @@
 
                 <p>It will take a few minutes for the data export to be generated. We'll email you when the file is ready.</p>
 
-                <label>E-mail address
-                    <input type="text" name="email" />
-                </label>
+                <div class="form-group">
+
+                    <label>E-mail address
+                        <input type="email" name="email" data-error="That email address is invalid" required="required" />
+                    </label>
+                    <div class="help-block with-errors"></div>
+                </div>
 
             </div>
         </div>

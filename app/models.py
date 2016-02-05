@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# from sqlalchemy import Column, Integer, String, ForeignKey
-# from sqlalchemy.orm import relationship
 from flask.ext.security import UserMixin, RoleMixin
 from app import db
 
@@ -61,3 +59,10 @@ class ExportJobIncludeValue(db.Model):
     job_id = db.Column(db.Integer(), db.ForeignKey('export_job.id'))
     variable_name = db.Column(db.String(255))
     variable_value = db.Column(db.String(255))
+
+
+class Downloads(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer(), db.ForeignKey('export_job.id'))
+    ip = db.Column(db.String(45))
+    downloaded_at = db.Column(db.DateTime())

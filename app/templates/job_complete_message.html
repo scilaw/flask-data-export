@@ -3,9 +3,10 @@
     </head>
     <body>
 
-        Export job {{ job.id }} for {{ user.email }}
+        Your export job #{{ job.id }} for {{ datasets[dataset_name]['name'] }} is ready.
 
-        {{ datasets[dataset_name]['name'] }}
-
+        You can download the result at 
+        <a href="{{base_url}}/{{ url_for('views.download', job_id=job.id) }}">{{base_url}}/{{ url_for('views.download', job_id=job.id) }}</a>
+        
     </body>
 </html>

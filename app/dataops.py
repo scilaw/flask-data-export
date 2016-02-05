@@ -39,7 +39,9 @@ def load_data(dataset_name):
     if dataset_name not in loaded_datasets:
         filename = datasets.datasets[dataset_name]['source']
         path = datasets.data_path + os.path.sep + filename
-        loaded_datasets[dataset_name] = pandas.read_csv(path)
+        data = pandas.read_csv(path)
+        data.fillna('', inplace=True)
+        loaded_datasets[dataset_name] = data
     return loaded_datasets[dataset_name]
 
 

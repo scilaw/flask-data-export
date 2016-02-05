@@ -18,11 +18,18 @@ from sample import stratified_random_sample
 
 
 def get_filtered_data(data, filter_vars):
+    filters = {}
     for filter_var in filter_vars:
-        variable_name = filter_var.variable_name
-        variable_value = filter_var.variable_value
-        mask = data[variable_name] == variable_value
-        data = data[mask]
+        var_name = filter_var.variable_name
+        var_value = filter_var.variable_value
+        if (not filters.has_key(var_name)):
+            filters[var_name] = []
+        filters[var_name].append(var_value)
+    for var_name in filters:
+        values = filters[var_name]
+        app.logger.info("Find data where " + var_name + " is in " + str(values))
+        data = data[data[var_name].astype(str).isin(values)]
+        app.logger.info("Got " + str(len(data)) + " rows")
     return data
 
 
@@ -52,17 +59,30 @@ def get_data_export(job, select_vars, filter_vars):
     return get_select_fields(data, select_vars)
 
 
-def export_zip(data, job_id, dataset_name):
+def export_description(job, select_vars, filter_vars):
+    field_values = dataops.all_datasets_key_fields_unique_values()
+    return render_template('export_description.txt',
+                           job=job,
+                           field_values=field_values,
+                           dataset_name=job.dataset_name,
+                           datasets=datasets.datasets,
+                           select_vars=select_vars,
+                           filter_vars=filter_vars)
+
+
+def export_zip(data, job_id, dataset_name, description_text):
     app.logger.info("Make zip")
     tempdir = mkdtemp(prefix='nexp')
     os.chdir(tempdir)
     fname = dataset_name + '.csv'
     zip_fname = 'export_' + str(job_id) + '.zip'
     app.logger.info("Write csv")
-    data.to_csv(fname)
-    zip_file = zipfile.ZipFile(zip_fname, mode='w')
+    data.to_csv(fname, index=False)
+    zip_file = zipfile.ZipFile(zip_fname, 'w', zipfile.ZIP_DEFLATED)
     app.logger.info("Write csv to zip")
     zip_file.write(fname)
+    with open("export_description.txt", "w") as text_file:
+        text_file.write(description_text)
     add_file_path = os.path.join(app.config['BASE_DIR'], datasets.data_path)
     for add_file in datasets.include_always:
         source = os.path.join(add_file_path, add_file)
@@ -77,7 +97,9 @@ def export_zip(data, job_id, dataset_name):
 
 
 def notify_complete(user, job, select_vars, filter_vars):
+    base_url = app.config['BASE_URL']
     html = render_template('job_complete_message.html',
+                           base_url=base_url,
                            user=user,
                            job=job,
                            dataset_name=job.dataset_name,
@@ -98,10 +120,18 @@ def job_complete(job, select_vars, filter_vars):
     db.session.commit()
 
 
+def job_description_only(job_id):
+    job = ExportJob().query.get(job_id)
+    select_vars = ExportJobSelectVariable().query.filter_by(job_id=job.id)
+    filter_vars = ExportJobIncludeValue().query.filter_by(job_id=job.id)
+    return export_description(job, select_vars, filter_vars)
+
+
 def run_export_job(job_id):
     job = ExportJob().query.get(job_id)
     select_vars = ExportJobSelectVariable().query.filter_by(job_id=job.id)
     filter_vars = ExportJobIncludeValue().query.filter_by(job_id=job.id)
     data = get_data_export(job, select_vars, filter_vars)
-    export_zip(data, job.id, job.dataset_name)
+    description_text = export_description(job, select_vars, filter_vars)
+    export_zip(data, job.id, job.dataset_name, description_text)
     job_complete(job, select_vars, filter_vars)
