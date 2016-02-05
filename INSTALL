@@ -11,6 +11,10 @@ sudo pip install flask-debugtoolbar
 # Directories
 mkdir -p cache exports instance
 
+# Set up proper permissions
+chown www-data.www-data cache exports
+chmod 775 cache exports
+
 # Make the configuration
 cp example.cfg instance/app.cfg
 

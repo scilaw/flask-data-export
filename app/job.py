@@ -22,12 +22,12 @@ def get_filtered_data(data, filter_vars):
     for filter_var in filter_vars:
         var_name = filter_var.variable_name
         var_value = filter_var.variable_value
-        if (not filters.has_key(var_name)):
+        if (var_name not in filters):
             filters[var_name] = []
         filters[var_name].append(var_value)
     for var_name in filters:
         values = filters[var_name]
-        app.logger.info("Find data where " + var_name + " is in " + str(values))
+        app.logger.info("Data where " + var_name + " is in " + str(values))
         data = data[data[var_name].astype(str).isin(values)]
         app.logger.info("Got " + str(len(data)) + " rows")
     return data
@@ -81,8 +81,10 @@ def export_zip(data, job_id, dataset_name, description_text):
     zip_file = zipfile.ZipFile(zip_fname, 'w', zipfile.ZIP_DEFLATED)
     app.logger.info("Write csv to zip")
     zip_file.write(fname)
-    with open("export_description.txt", "w") as text_file:
+    description_fname = "export_description.txt"
+    with open(description_fname, "w") as text_file:
         text_file.write(description_text)
+    zip_file.write(description_fname)
     add_file_path = os.path.join(app.config['BASE_DIR'], datasets.data_path)
     for add_file in datasets.include_always:
         source = os.path.join(add_file_path, add_file)
