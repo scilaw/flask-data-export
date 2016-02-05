@@ -1,12 +1,11 @@
 # Install dependencies
-sudo apt-get install python-dev libffi-dev
-sudo pip install flask-appbuilder
-sudo pip install flask-bcrypt
+sudo apt-get install -y python-dev python-pip libffi-dev
+sudo pip install pandas
+sudo pip install blosc
 sudo pip install Flask-SQLAlchemy
 sudo pip install Flask-Migrate
 sudo pip install Flask-Security
 sudo pip install Flask-Mail
-sudo pip install pandas
 sudo pip install flask-debugtoolbar
 
 # Directories
@@ -15,11 +14,11 @@ mkdir -p cache exports instance
 # Make the configuration
 cp example.cfg instance/app.cfg
 
-# Set up the database
-python manage.py db upgrade
+# Now edit the configuration
+read
 
 # Set up secret keys
 bash setup_keys.sh
 
-# Make sure the manager script is executable
-chmod +x manage.py
+# Set up the database
+python manage.py db upgrade
