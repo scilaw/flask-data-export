@@ -2,6 +2,7 @@ $(document).ready(function() {
 
     $('.nav-tabs a').click(function(e) {
         e.preventDefault();
+        $('div.flashes').remove();
         $(this).tab('show');
     })
 

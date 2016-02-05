@@ -4,7 +4,7 @@ import subprocess
 import datetime
 from flask import Blueprint
 from flask import request
-from flask import render_template, url_for
+from flask import render_template, url_for, flash
 from flask import send_from_directory, redirect
 
 import datasets
@@ -102,4 +102,5 @@ def submit_job():
     make_select_vars_from_form(job.id)
     make_filter_vars_from_form(job.id, job.dataset_name)
     launch_job(job)
+    flash('Job submitted. We will e-mail you when your export is ready.')
     return redirect(url_for('views.index'))
