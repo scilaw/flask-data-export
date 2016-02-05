@@ -21,4 +21,4 @@ def stratified_random_sample(dataset, fields, proportion):
         n = probabilistic_rounding(proportion * size)
         if (n > 0):
             rows = rows + list(numpy.random.choice(row_numbers, n))
-    return dataset.irow(rows)
+    return dataset.loc[rows]

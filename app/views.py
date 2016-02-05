@@ -66,6 +66,9 @@ def note_download(job_id):
     download.job_id = job_id
     download.ip = request.environ['REMOTE_ADDR']
     download.downloaded_at = datetime.datetime.utcnow()
+    job = ExportJob().query.get(job_id)
+    job.status = 'downloaded'
+    db.session.add(job)
     db.session.add(download)
     db.session.commit()
 
