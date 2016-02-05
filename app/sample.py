@@ -53,7 +53,8 @@ def stratified_random_sample(dataset, fields, proportion):
     sample = pandas.DataFrame()
     for i in range(len(partitions)):
         n = probabilistic_rounding(proportion * sizes[i])
-        rows = partition_rows(dataset, fields, partitions[i])
-        append = dataset[rows].sample(n)
-        sample = pandas.concat([sample, append])
+        if (n > 0):
+            rows = partition_rows(dataset, fields, partitions[i])
+            append = dataset[rows].sample(n)
+            sample = pandas.concat([sample, append])
     return sample
