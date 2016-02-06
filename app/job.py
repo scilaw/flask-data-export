@@ -108,7 +108,7 @@ def notify_complete(user, job, select_vars, filter_vars):
                            datasets=datasets.datasets,
                            select_vars=select_vars,
                            filter_vars=filter_vars)
-    subject = 'Subject line'
+    subject = 'Neulaw Data Export'
     msg = Message(subject=subject, html=html, recipients=[user.email])
     mail.send(msg)
     return True
