@@ -8,8 +8,12 @@ $(document).ready(function() {
 
     $('.nav-tabs a:first').tab('show');
 
-    $('select.select_vars').multiselect();
+    $('select.select_vars').multiselect({
+        includeSelectAllOption: true
+    });
 
-    $('select.filter_vars').multiselect();
+    $('select.filter_vars').multiselect({
+        includeSelectAllOption: true
+    });
 
 });

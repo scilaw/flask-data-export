@@ -56,7 +56,13 @@
                     <label>{{ datasets[dataset_name]['fields'][field] }}
                         <select class="filter_vars" name="filter_vars_{{ field }}" multiple="multiple">
                             {% for value in field_values[dataset_name][field] %}
-                            <option selected="selected" value="{{ value }}">{{ value }}</option>
+                            <option selected="selected" value="{{ value }}">
+                            {% if value == '' %}
+                            (blank)
+                            {% else %}
+                            {{ value }}
+                            {% endif %}
+                            </option>
                             {% endfor %}
                         </select>
                     </label>
