@@ -51,6 +51,7 @@ def fields_unique_values(dataset_name, fields):
     data = load_data(dataset_name)
     for field in fields:
         ret[field] = data[field].unique()
+        ret[field].sort()
     return ret
 
 
