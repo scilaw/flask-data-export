@@ -30,7 +30,10 @@ def locked_run(callback, lock_file_name):
             lock.acquire()
             callback()
             done = True
-        except:
-            time.sleep(10)
+        except IOError as e:
+            if e.errno != errno.EAGAIN:
+                raise
+            else:
+                time.sleep(10)
         finally:
             lock.release()
