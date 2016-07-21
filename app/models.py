@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from flask.ext.security import UserMixin, RoleMixin
+from datetime import datetime
 from app import db
 
 
@@ -46,6 +47,11 @@ class ExportJob(db.Model):
     dataset_name = db.Column(db.String(255))
     do_sampling = db.Column(db.Boolean)
     sample_percent = db.Column(db.SmallInteger)
+    created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow,
+                           nullable=False,
+                           server_default=db.text('0'))
+    updated_at = db.Column(db.TIMESTAMP, default=datetime.utcnow,
+                           onupdate=datetime.utcnow, nullable=False)
 
 
 class ExportJobSelectVariable(db.Model):

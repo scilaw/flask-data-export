@@ -114,6 +114,17 @@ def notify_complete(user, job, select_vars, filter_vars):
     return True
 
 
+def notify_recent_jobs():
+    base_url = app.config['BASE_URL']
+    admin_email = app.config['ADMIN_EMAIL']
+    html = render_template('recent_jobs.html',
+                           base_url=base_url)
+    subject = 'Neulaw Data Export Jobs Report'
+    msg = Message(subject=subject, html=html, recipients=[admin_email])
+    mail.send(msg)
+    return True
+
+
 def job_complete(job, select_vars, filter_vars):
     user = User().query.get(job.user_id)
     notify_complete(user, job, select_vars, filter_vars)
