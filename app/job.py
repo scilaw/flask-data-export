@@ -116,13 +116,11 @@ def notify_complete(user, job, select_vars, filter_vars):
 
 
 def notify_recent_jobs():
-    base_url = app.config['BASE_URL']
     admin_email = app.config['ADMIN_EMAIL']
     last_week = datetime.utcnow() - timedelta(weeks=1)
     query = db.session.query(ExportJob).join(User).add_column('email')
     jobs_emails = query.filter(ExportJob.created_at > last_week).all()
-    html = render_template('recent_jobs.html',
-                           base_url=base_url, jobs_emails=jobs_emails)
+    html = render_template('recent_jobs.html', jobs_emails=jobs_emails)
     subject = 'Neulaw Data Export Jobs Report'
     msg = Message(subject=subject, html=html, recipients=[admin_email])
     mail.send(msg)
