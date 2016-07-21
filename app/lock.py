@@ -24,9 +24,9 @@ class Lock:
 
 def locked_run(callback, lock_file_name):
     done = False
+    lock = Lock(lock_file_name)
     while not done:
         try:
-            lock = Lock(lock_file_name)
             lock.acquire()
             callback()
             done = True

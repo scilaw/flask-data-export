@@ -1,0 +1,18 @@
+<html>
+    <head>
+    </head>
+    <body>
+
+        Jobs from the past week:
+
+        <table>
+        {% for job, email in jobs_emails %}
+        <tr>
+            <td>#{{ job.id }}</td>
+            <td>{{ job.created_at }}</td>
+            <td>{{ email }}</td>
+            <td>{{ job.status }}</td>
+        </tr>
+        
+    </body>
+</html>
