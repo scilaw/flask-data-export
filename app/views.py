@@ -31,7 +31,7 @@ def make_job_from_form():
     job.user_id = user.id
     job.dataset_name = request.form.get('dataset_name')
     job.do_sampling = int(request.form.get('do_sampling') == 'on')
-    job.sample_percent = int(request.form.get('sample_percent'))
+    job.sample_percent = int(float(request.form.get('sample_percent')))
     job.status = 'new'
     db.session.add(job)
     db.session.commit()
