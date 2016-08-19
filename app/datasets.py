@@ -43,6 +43,7 @@ datasets['hc'] = {
         'calc.age': "Calculated Age",
         'calc.race': "Calculated Race",
         'calc.gender': "Calculated Gender",
+        'calc.casenr': "Calculated Case Number",
         'calc.broad': "Calculated Broad Crime Category",
         'calc.detailed': "Calculated Detailed Crime Category",
         'calc.disp': "Calculated Disposition",
@@ -53,8 +54,7 @@ datasets['hc'] = {
         'calc.gender',
         'calc.race',
         'calc.disp',
-        'calc.broad',
-        'disp.plea'
+        'calc.broad'
     ],
     'additional_files': [
         'HC crime codes - Dispositions.csv',
@@ -93,12 +93,12 @@ datasets['mdc'] = {
         'calc.broad': "Broad Crime Category",
         'calc.detailed': "Detailed Crime Category",
         'calc.disp': "Calculated Disposition",
-        'calc.year': "Calculated Year",
+        'calc.year': "Calculated Year"
     },
     'fields_of_interest': [
         'calc.year',
         'def.gender',
-        'def.race',
+        'calc.race',
         'calc.disp',
         'calc.broad',
         'disp.plea'
@@ -138,11 +138,12 @@ datasets['nyc'] = {
         'calc.detailed': "Detailed Crime Category",
         'calc.disp': "Calculated Disposition",
         'calc.year': "Calculated Year",
+        'calc.race': "Calculated Race"
     },
     'fields_of_interest': [
         'calc.year',
         'def.gender',
-        'def.race',
+        'calc.race',
         'calc.disp',
         'calc.broad',
     ],
