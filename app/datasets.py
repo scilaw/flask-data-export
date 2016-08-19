@@ -6,7 +6,7 @@ include_always = ['codebook.html']
 datasets = {}
 
 datasets['hc'] = {
-    'name': "Harris County",
+    'name': "Harris County, TX",
     'source': "hc.csv",
     'fields': {
         'case.date': "Case Date",
@@ -70,7 +70,7 @@ datasets['hc'] = {
 }
 
 datasets['mdc'] = {
-    'name': "Miami Dade County",
+    'name': "Miami Dade County, FL",
     'source': "mdc.csv",
     'fields': {
         'arrest.date': "Arrest Date",
@@ -100,8 +100,7 @@ datasets['mdc'] = {
         'def.gender',
         'calc.race',
         'calc.disp',
-        'calc.broad',
-        'disp.plea'
+        'calc.broad'
     ],
     'additional_files': [
         'MDC crime codes - Dispositions.csv',
@@ -117,7 +116,7 @@ datasets['mdc'] = {
 }
 
 datasets['nyc'] = {
-    'name': "New York City",
+    'name': "New York City, NY",
     'source': "nyc.csv",
     'fields': {
         'arrest.county': "Arrest County",
