@@ -53,8 +53,8 @@ datasets['hc'] = {
         'calc.year',
         'calc.gender',
         'calc.race',
-        'calc.disp',
-        'calc.broad'
+        'calc.broad',
+        'calc.disp'
     ],
     'additional_files': [
         'HC crime codes - Dispositions.csv',
@@ -99,8 +99,8 @@ datasets['mdc'] = {
         'calc.year',
         'def.gender',
         'calc.race',
-        'calc.disp',
-        'calc.broad'
+        'calc.broad',
+        'calc.disp'
     ],
     'additional_files': [
         'MDC crime codes - Dispositions.csv',
@@ -143,8 +143,8 @@ datasets['nyc'] = {
         'calc.year',
         'def.gender',
         'calc.race',
-        'calc.disp',
         'calc.broad',
+        'calc.disp'
     ],
     'additional_files': [
         'NYC crime codes - Dispositions.csv',
