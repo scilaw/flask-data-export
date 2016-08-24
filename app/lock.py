@@ -1,4 +1,5 @@
 
+import errno
 import fcntl
 import time
 
