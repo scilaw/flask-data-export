@@ -1,7 +1,7 @@
 from flask import Flask, g
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.migrate import Migrate
-from flask.ext.mail import Mail
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_mail import Mail
 from flask_debugtoolbar import DebugToolbarExtension
 
 

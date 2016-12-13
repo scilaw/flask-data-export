@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask.ext.security import UserMixin, RoleMixin
+from flask_security import UserMixin, RoleMixin
 from datetime import datetime
 from app import db
 

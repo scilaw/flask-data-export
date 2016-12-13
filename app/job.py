@@ -3,7 +3,7 @@
 import os
 import zipfile
 from flask import render_template
-from flask.ext.mail import Message
+from flask_mail import Message
 from tempfile import mkdtemp
 from shutil import copyfile, move, rmtree
 from datetime import datetime, timedelta

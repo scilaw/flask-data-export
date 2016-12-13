@@ -1,7 +1,9 @@
 
+import datetime
+import json
 import os
 import subprocess
-import datetime
+import urllib2
 from flask import Blueprint
 from flask import request
 from flask import render_template, url_for, flash
@@ -73,6 +75,22 @@ def note_download(job_id):
     db.session.commit()
 
 
+# https://github.com/eternnoir/flask-nocaptcha-recaptcha/blob/master/app.py
+def checkRecaptcha(response, secretkey):
+    url = 'https://www.google.com/recaptcha/api/siteverify?'
+    url = url + 'secret=' + secretkey
+    url = url + '&response=' + response
+    try:
+        jsonobj = json.loads(urllib2.urlopen(url).read())
+        if jsonobj['success']:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+        return False
+
+
 @views.route('/')
 def index():
     field_values = dataops.all_datasets_key_fields_unique_values()
@@ -80,6 +98,7 @@ def index():
     dataset_record_count = dataops.dataset_record_counts()
     first_dataset = datasets.datasets.items()[0][0]
     return render_template('index.html',
+                           site_key=app.config['RECAPTHA_SITE_KEY'],
                            datasets=datasets.datasets,
                            field_values=field_values,
                            dataset_fields=dataset_fields,
@@ -98,9 +117,14 @@ def download(job_id):
 
 @views.route('/submit_job', methods=['POST'])
 def submit_job():
-    job = make_job_from_form()
-    make_select_vars_from_form(job.id)
-    make_filter_vars_from_form(job.id, job.dataset_name)
-    launch_job(job)
-    flash('Job submitted. We will e-mail you when your export is ready.')
+    response = request.form.get('g-recaptcha-response')
+    secret_key = app.config['RECAPTHA_SECRET_KEY']
+    if secret_key == '' or checkRecaptcha(response, secret_key):
+        job = make_job_from_form()
+        make_select_vars_from_form(job.id)
+        make_filter_vars_from_form(job.id, job.dataset_name)
+        launch_job(job)
+        flash('Job submitted. We will e-mail you when your export is ready.')
+    else:
+        flash('Invalid captcha. Job not submitted.')
     return redirect(url_for('views.index'))

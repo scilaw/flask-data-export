@@ -1,5 +1,5 @@
 
-from flask.ext.security import Security, SQLAlchemyUserDatastore
+from flask_security import Security, SQLAlchemyUserDatastore
 from app import db
 from .models import Role, User
 
