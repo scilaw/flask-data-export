@@ -114,17 +114,12 @@
                     <div class="help-block with-errors"></div>
                 </div>
 
-            </div>
-        </div>
-
-        {% if site_key != '' %}
-        <div class="panel panel-primary">
-            <div class="panel-heading">Captcha</div>
-            <div class="panel-body">
+                {% if site_key != '' %}
                 <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
+                {% endif %}
+
             </div>
         </div>
-        {% endif %}
 
         <div class="clearfix">
             <input type="submit" value="Export!" class="btn btn-success btn-lg pull-right" />
