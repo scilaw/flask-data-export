@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% if site_key != '' %}
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+<script>
+var onloadCallback = function() {
+    {% for dataset_name in field_values %}
+    grecaptcha.render('recaptcha_{{ dataset_name }}', {'sitekey' : '{{ site_key }}'});
+    {% endfor %}
+};
+</script>
+{% endif %}
+
 <br />
 
 <div class="well">
@@ -115,7 +126,7 @@
                 </div>
 
                 {% if site_key != '' %}
-                <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
+                <div id="recaptcha_{{ dataset_name }}"></div>
                 {% endif %}
 
             </div>
