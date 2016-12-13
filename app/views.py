@@ -77,6 +77,8 @@ def note_download(job_id):
 
 # https://github.com/eternnoir/flask-nocaptcha-recaptcha/blob/master/app.py
 def checkRecaptcha(response, secretkey):
+    if response is None:
+        return False
     url = 'https://www.google.com/recaptcha/api/siteverify?'
     url = url + 'secret=' + secretkey
     url = url + '&response=' + response
