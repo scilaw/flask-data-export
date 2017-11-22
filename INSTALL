@@ -6,20 +6,19 @@ sudo pip install Flask-SQLAlchemy
 sudo pip install Flask-Migrate
 sudo pip install Flask-Security
 sudo pip install Flask-Mail
-sudo pip install flask-debugtoolbar
+sudo pip install Flask-debugtoolbar
 
 # Directories
 mkdir -p cache exports instance
 
 # Set up proper permissions
-chown www-data.www-data cache exports
+chown www-data cache exports
 chmod 775 cache exports
 
 # Make the configuration
 cp example.cfg instance/app.cfg
 
 # Now edit the configuration
-read
 
 # Set up secret keys
 bash setup_keys.sh
