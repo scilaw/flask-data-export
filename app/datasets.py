@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-data_path = 'Neulaw/'
+data_path = 'Scilaw/'
 include_always = ['codebook.html']
 datasets = {}
 

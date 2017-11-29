@@ -109,7 +109,7 @@ def notify_complete(user, job, select_vars, filter_vars):
                            datasets=datasets.datasets,
                            select_vars=select_vars,
                            filter_vars=filter_vars)
-    subject = 'Neulaw Data Export'
+    subject = 'Scilaw Data Export'
     msg = Message(subject=subject, html=html, recipients=[user.email])
     mail.send(msg)
     return True
@@ -121,7 +121,7 @@ def notify_recent_jobs():
     query = db.session.query(ExportJob).join(User).add_column('email')
     jobs_emails = query.filter(ExportJob.created_at > last_week).all()
     html = render_template('recent_jobs.html', jobs_emails=jobs_emails)
-    subject = 'Neulaw Data Export Jobs Report'
+    subject = 'Scilaw Data Export Jobs Report'
     msg = Message(subject=subject, html=html, recipients=[admin_email])
     mail.send(msg)
     return True

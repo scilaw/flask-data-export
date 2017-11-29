@@ -1,6 +1,8 @@
 *.pyc
 *.*~
+*.py.swp
 instance/*
 cache/*
 exports/*
 Neulaw
+Scilaw
